@@ -10,6 +10,7 @@ import {
   meanDiff,
   toGrey,
 } from "./frames";
+import { loadObjectDetector, startOverlay, type OverlayAction } from "./objects";
 import type { AnalysisResult, DetectorStatus, LastResult } from "./types";
 import { useCamera } from "./useCamera";
 
@@ -29,8 +30,16 @@ interface Run {
   nextCallAt: number;
   alertUntil: number;
   mockStep: number | null;
+  lastAnalysis: AnalysisResult | null;
   tickTimer?: number;
   stopTimer?: number;
+  stopOverlay?: () => void;
+}
+
+function overlayAction(run: Run): OverlayAction {
+  const r = run.lastAnalysis;
+  const text = r && r.event !== "none" ? `${r.event.toUpperCase()}: ${r.item}` : null;
+  return { text, isAlert: Date.now() < run.alertUntil };
 }
 
 function describe(r: AnalysisResult): string {
@@ -71,6 +80,7 @@ export function useDetector() {
     try {
       const result = await analyze(sheet, run.mockStep === null ? undefined : run.mockStep++);
       if (runRef.current !== run) return;
+      run.lastAnalysis = result;
       setLastResult({ line: describe(result), sheet });
       const now = Date.now();
       const isAlert =
@@ -110,12 +120,25 @@ export function useDetector() {
     if (!run) return;
     window.clearInterval(run.tickTimer);
     window.clearTimeout(run.stopTimer);
+    run.stopOverlay?.();
     runRef.current = null;
     camera.stop();
     setStatus("Idle");
   }
 
-  async function start(video: HTMLVideoElement) {
+  // Boxes are optional: if the model fails to load, detection still runs without them.
+  async function attachOverlay(run: Run, canvas: HTMLCanvasElement) {
+    try {
+      const detector = await loadObjectDetector();
+      if (runRef.current !== run) return;
+      run.stopOverlay = startOverlay(detector, run.video, canvas, () => overlayAction(run));
+    } catch (error) {
+      if (runRef.current !== run) return;
+      setLastResult({ line: `Object boxes unavailable: ${errorMessage(error)}`, sheet: null });
+    }
+  }
+
+  async function start(video: HTMLVideoElement, overlay: HTMLCanvasElement) {
     if (runRef.current) return;
     const isMock = new URLSearchParams(window.location.search).get("mock") === "1";
     const run: Run = {
@@ -126,6 +149,7 @@ export function useDetector() {
       nextCallAt: 0,
       alertUntil: 0,
       mockStep: isMock ? 0 : null,
+      lastAnalysis: null,
     };
     runRef.current = run;
     try {
@@ -141,6 +165,7 @@ export function useDetector() {
     run.tickTimer = window.setInterval(() => tick(run), FRAME_INTERVAL_MS);
     run.stopTimer = window.setTimeout(stop, MAX_RUN_MS);
     setStatus("Watching");
+    void attachOverlay(run, overlay);
   }
 
   // Refs and state setters are stable, so the first render's stop is safe to use on unmount.

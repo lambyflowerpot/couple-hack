@@ -28,25 +28,38 @@ const STATUS_VARIANT: Record<string, BadgeProps["variant"]> = {
 
 function Page() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const overlayRef = useRef<HTMLCanvasElement>(null);
   const { status, lastResult, start, stop } = useDetector();
   const isRunning = status !== "Idle";
 
+  const onStart = () => {
+    if (videoRef.current && overlayRef.current) void start(videoRef.current, overlayRef.current);
+  };
+
   return (
     <main className="mx-auto flex min-h-screen max-w-xl flex-col gap-4 bg-background p-4 text-foreground">
-      <video
-        ref={videoRef}
-        className="aspect-video w-full rounded-lg bg-black object-contain"
-        playsInline
-        muted
-        autoPlay
-      />
+      {/* Same size and object-contain as the video, so overlay pixels line up with video pixels. */}
+      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 h-full w-full object-contain"
+          playsInline
+          muted
+          autoPlay
+        />
+        <canvas
+          ref={overlayRef}
+          className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+          aria-hidden
+        />
+      </div>
       <div className="flex items-center gap-3">
         {isRunning ? (
           <Button variant="outline" onClick={stop}>
             Stop
           </Button>
         ) : (
-          <Button onClick={() => videoRef.current && void start(videoRef.current)}>Start</Button>
+          <Button onClick={onStart}>Start</Button>
         )}
         <Badge variant={STATUS_VARIANT[status]} role="status">
           {status}
