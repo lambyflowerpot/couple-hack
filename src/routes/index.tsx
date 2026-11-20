@@ -86,6 +86,20 @@ function Landing() {
           turns the cameras you already have into an always-on detection system that alerts your guards the moment an
           item is concealed.
         </p>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Link
+            to="/camera"
+            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
+          >
+            <Camera className="h-5 w-5" /> Camera demo
+          </Link>
+          <Link
+            to="/guard"
+            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-destructive text-lg font-bold text-destructive-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-destructive/90 hover:shadow-xl"
+          >
+            <ShieldCheck className="h-5 w-5" /> Guard demo
+          </Link>
+        </div>
       </section>
 
       {/* Stats */}
@@ -109,24 +123,6 @@ function Landing() {
               </div>
             ))}
           </dl>
-        </div>
-      </section>
-
-      {/* CTAs */}
-      <section className="mx-auto max-w-5xl px-4 py-12">
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link
-            to="/camera"
-            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
-          >
-            <Camera className="h-5 w-5" /> Camera demo
-          </Link>
-          <Link
-            to="/guard"
-            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-destructive text-lg font-bold text-destructive-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-destructive/90 hover:shadow-xl"
-          >
-            <ShieldCheck className="h-5 w-5" /> Guard demo
-          </Link>
         </div>
       </section>
 
