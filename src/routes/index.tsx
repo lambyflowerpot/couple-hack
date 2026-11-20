@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Camera, ShieldCheck, ScanEye, BellRing, FileCheck } from "lucide-react";
+import { Camera, ShieldCheck, ScanEye, BellRing, FileCheck, ChevronDown } from "lucide-react";
+import type { CSSProperties } from "react";
+import { Reveal } from "@/components/reveal";
+import { CountUp } from "@/components/count-up";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,6 +25,9 @@ export const Route = createFileRoute("/")({
   }),
   component: Landing,
 });
+
+/** On-load stagger delay for `.rise`. */
+const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
 const STATS = [
   { value: "£2.2bn", label: "lost to customer theft by UK retailers in a single year", tone: "red" },
@@ -55,7 +61,7 @@ function Landing() {
     <main className="dark min-h-screen bg-background text-foreground">
       {/* Nav */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
-        <div className="brand-strip h-1" aria-hidden="true" />
+        <div className="brand-strip-flow h-1" aria-hidden="true" />
         <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 sm:flex sm:justify-between sm:py-5">
           <div className="flex min-w-0 items-center gap-3">
             <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto shrink-0 sm:h-14" />
@@ -63,7 +69,7 @@ function Landing() {
           </div>
           <Link
             to="/guard"
-            className="shrink-0 rounded-xl bg-destructive px-4 py-2.5 text-base font-bold text-destructive-foreground transition hover:bg-destructive/90 sm:px-7 sm:py-3.5 sm:text-lg"
+            className="btn-shine shrink-0 rounded-xl bg-destructive px-4 py-2.5 text-base font-bold text-destructive-foreground transition hover:bg-destructive/90 sm:px-7 sm:py-3.5 sm:text-lg"
           >
             Guard demo
           </Link>
@@ -71,56 +77,91 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-5xl px-4 pb-10 pt-10 text-center sm:pt-14">
-        <p className="mx-auto inline-block rounded-full border border-border bg-card px-4 py-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          UK retail crime · 2025
-        </p>
-        <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">
-          Supermarket theft is at <span className="text-destructive">record levels.</span>{" "}
-          Your CCTV can <span className="text-primary">stop it.</span>
-        </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
-          UK retailers lost <span className="font-bold text-destructive">£2.2bn</span> to shoplifting last year —{" "}
-          <span className="font-bold text-destructive">55,000 thefts every day</span>, yet only{" "}
-          <span className="font-bold text-primary">529,994 offences</span> were ever recorded by police. TheftWatch
-          turns the cameras you already have into an always-on detection system that alerts your guards the moment an
-          item is concealed.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link
-            to="/camera"
-            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
+      <section className="relative mx-auto max-w-5xl overflow-hidden px-4 pb-10 pt-10 text-center sm:pt-14">
+        <div className="ambient" aria-hidden="true">
+          <span className="grid-faint" />
+          <span className="glow glow-a" />
+          <span className="glow glow-b" />
+          <span className="scanline" />
+        </div>
+
+        <div className="relative">
+          <p
+            className="rise inline-block rounded-full border border-border bg-card/70 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
+            style={delay(80)}
           >
-            <Camera className="h-5 w-5" /> Camera demo
-          </Link>
-          <Link
-            to="/guard"
-            className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-destructive text-lg font-bold text-destructive-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-destructive/90 hover:shadow-xl"
+            UK retail crime · 2025
+          </p>
+          <h1
+            className="rise mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl"
+            style={delay(200)}
           >
-            <ShieldCheck className="h-5 w-5" /> Guard demo
-          </Link>
+            Supermarket theft is at <span className="text-destructive">record levels.</span> Your CCTV can{" "}
+            <span className="underline-sweep text-primary">stop it.</span>
+          </h1>
+          <p
+            className="rise mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg"
+            style={delay(360)}
+          >
+            UK retailers lost <span className="font-bold text-destructive">£2.2bn</span> to shoplifting last year —{" "}
+            <span className="font-bold text-destructive">55,000 thefts every day</span>, yet only{" "}
+            <span className="font-bold text-primary">529,994 offences</span> were ever recorded by police. TheftWatch
+            turns the cameras you already have into an always-on detection system that alerts your guards the moment an
+            item is concealed.
+          </p>
+          <div
+            className="rise mt-6 flex flex-col items-center justify-center gap-4 sm:mt-8 sm:flex-row"
+            style={delay(520)}
+          >
+            <Link
+              to="/camera"
+              className="btn-shine flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
+            >
+              <Camera className="h-5 w-5" /> Camera demo
+            </Link>
+            <Link
+              to="/guard"
+              className="btn-shine flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-destructive text-lg font-bold text-destructive-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-destructive/90 hover:shadow-xl"
+            >
+              <ShieldCheck className="h-5 w-5" /> Guard demo
+            </Link>
+          </div>
+          <a
+            href="#stats"
+            className="rise mt-5 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-accent sm:mt-8"
+            style={delay(760)}
+          >
+            See the numbers <ChevronDown className="bob h-4 w-4" />
+          </a>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-y border-border bg-card/40">
+      <section id="stats" className="scroll-mt-24 border-y border-border bg-card/40">
         <div className="mx-auto max-w-5xl px-4 py-10">
-          <p className="mx-auto max-w-2xl text-center text-xs text-muted-foreground">
-            Figures from the British Retail Consortium's 2025 Crime Survey and the Office for National Statistics.
-          </p>
+          <Reveal>
+            <p className="mx-auto max-w-2xl text-center text-xs text-muted-foreground">
+              Figures from the British Retail Consortium's 2025 Crime Survey and the Office for National Statistics.
+            </p>
+          </Reveal>
           <dl className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-            {STATS.map((s) => (
-              <div
-                key={s.value}
-                className={`rounded-xl border bg-card p-4 shadow-sm sm:p-6 ${
-                  s.tone === "red" ? "border-destructive/50" : "border-border"
-                }`}
-              >
-                <dt className={`text-2xl font-extrabold tracking-tight sm:text-4xl ${s.tone === "red" ? "text-destructive" : "text-primary"}`}>
-                  {s.value}
-                </dt>
-                <dd className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">{s.label}</dd>
-              </div>
+            {STATS.map((s, i) => (
+              <Reveal key={s.value} delay={i * 90} className="h-full">
+                <div
+                  className={`card-lift h-full rounded-xl border bg-card p-4 shadow-sm sm:p-6 ${
+                    s.tone === "red" ? "border-destructive/50" : "border-border"
+                  }`}
+                >
+                  <dt
+                    className={`text-2xl font-extrabold tracking-tight sm:text-4xl ${
+                      s.tone === "red" ? "text-destructive" : "text-primary"
+                    }`}
+                  >
+                    <CountUp value={s.value} />
+                  </dt>
+                  <dd className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">{s.label}</dd>
+                </div>
+              </Reveal>
             ))}
           </dl>
         </div>
@@ -128,21 +169,25 @@ function Landing() {
 
       {/* Features */}
       <section className="mx-auto max-w-5xl px-4 py-14">
-        <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">How TheftWatch helps</h2>
+        <Reveal>
+          <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">How TheftWatch helps</h2>
+        </Reveal>
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {FEATURES.map((f) => (
-            <div key={f.title} className="rounded-xl border border-border bg-card p-6">
-              <f.icon className="h-8 w-8 text-primary" />
-              <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{f.text}</p>
-            </div>
+          {FEATURES.map((f, i) => (
+            <Reveal key={f.title} delay={i * 120} className="h-full">
+              <div className="card-lift group h-full rounded-xl border border-border bg-card p-6">
+                <f.icon className="h-8 w-8 text-primary transition-transform duration-500 group-hover:scale-110" />
+                <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{f.text}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-border">
-        <div className="brand-strip h-1" aria-hidden="true" />
+        <div className="brand-strip-flow h-1" aria-hidden="true" />
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-8 text-center">
           <img src="/logo-mark.png" alt="" className="h-8 w-auto" />
           <p className="text-xs text-muted-foreground">
