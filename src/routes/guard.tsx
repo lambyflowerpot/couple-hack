@@ -154,14 +154,14 @@ function GuardPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur">
+    <main className="dark min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="brand-strip h-1" aria-hidden="true" />
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <img src="/logo-mark.png" alt="TheftWatch" className="h-9 w-auto" />
+        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-4">
+          <div className="flex items-center gap-3">
+            <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto" />
             <div>
-              <h1 className="text-lg font-bold leading-tight">TheftWatch</h1>
+              <h1 className="text-2xl font-extrabold leading-tight tracking-tight">TheftWatch</h1>
               <p className="text-xs text-muted-foreground">Guard · live incident feed</p>
             </div>
           </div>
