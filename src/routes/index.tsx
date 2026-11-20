@@ -80,8 +80,11 @@ function Landing() {
           Your CCTV can <span className="text-primary">stop it.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
-          Shoplifting is the fastest-growing crime hitting UK supermarkets. TheftWatch turns the cameras you already
-          have into an always-on detection system that alerts your guards the moment an item is concealed.
+          UK retailers lost <span className="font-bold text-destructive">£2.2bn</span> to shoplifting last year —{" "}
+          <span className="font-bold text-destructive">55,000 thefts every day</span>, yet only{" "}
+          <span className="font-bold text-primary">529,994 offences</span> were ever recorded by police. TheftWatch
+          turns the cameras you already have into an always-on detection system that alerts your guards the moment an
+          item is concealed.
         </p>
       </section>
 
