@@ -1,6 +1,6 @@
-# Couple Hack
+# TheftWatch
 
-make a new project and link a github repo with it called Couple Hack
+TheftWatch is a shoplifting-detection demo: CCTV frames are checked for theft and store guards see the alerts live.
 
 This project was built with [Lovable](https://lovable.dev).
 

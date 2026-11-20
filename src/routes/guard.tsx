@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/guard")({
   head: () => ({
     meta: [
-      { title: "Guard — Couple Hack Shoplifting Alerts" },
+      { title: "Guard — TheftWatch Live Alerts" },
       { name: "description", content: "Live shoplifting incident feed for store guards, with evidence and review actions." },
-      { property: "og:title", content: "Guard — Couple Hack Shoplifting Alerts" },
+      { property: "og:title", content: "Guard — TheftWatch Live Alerts" },
       { property: "og:description", content: "Live shoplifting incident feed for store guards, with evidence and review actions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -157,9 +157,12 @@ function GuardPage() {
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
-          <div>
-            <h1 className="text-lg font-bold leading-tight">Couple Hack · Guard</h1>
-            <p className="text-xs text-muted-foreground">Live incident feed</p>
+          <div className="flex items-center gap-2">
+            <img src="/logo-mark.png" alt="TheftWatch" className="h-9 w-auto" />
+            <div>
+              <h1 className="text-lg font-bold leading-tight">TheftWatch</h1>
+              <p className="text-xs text-muted-foreground">Guard · live incident feed</p>
+            </div>
           </div>
           <div
             className={`rounded-full px-3 py-1 text-sm font-semibold ${newCount > 0 ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}
