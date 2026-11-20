@@ -71,19 +71,47 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-5xl px-4 pb-16 pt-14 text-center sm:pt-20">
+      <section className="mx-auto max-w-5xl px-4 pb-10 pt-10 text-center sm:pt-14">
         <p className="mx-auto inline-block rounded-full border border-border bg-card px-4 py-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           UK retail crime · 2025
         </p>
-        <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">
+        <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl">
           Supermarket theft is at <span className="text-destructive">record levels.</span>{" "}
           Your CCTV can <span className="text-primary">stop it.</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+        <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
           Shoplifting is the fastest-growing crime hitting UK supermarkets. TheftWatch turns the cameras you already
           have into an always-on detection system that alerts your guards the moment an item is concealed.
         </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      </section>
+
+      {/* Stats */}
+      <section className="border-y border-border bg-card/40">
+        <div className="mx-auto max-w-5xl px-4 py-10">
+          <p className="mx-auto max-w-2xl text-center text-xs text-muted-foreground">
+            Figures from the British Retail Consortium's 2025 Crime Survey and the Office for National Statistics.
+          </p>
+          <dl className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+            {STATS.map((s) => (
+              <div
+                key={s.value}
+                className={`rounded-xl border bg-card p-4 shadow-sm sm:p-6 ${
+                  s.tone === "red" ? "border-destructive/50" : "border-border"
+                }`}
+              >
+                <dt className={`text-2xl font-extrabold tracking-tight sm:text-4xl ${s.tone === "red" ? "text-destructive" : "text-primary"}`}>
+                  {s.value}
+                </dt>
+                <dd className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">{s.label}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* CTAs */}
+      <section className="mx-auto max-w-5xl px-4 py-12">
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             to="/camera"
             className="flex h-14 w-64 items-center justify-center gap-2 rounded-xl bg-primary text-lg font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl"
@@ -96,33 +124,6 @@ function Landing() {
           >
             <ShieldCheck className="h-5 w-5" /> Guard demo
           </Link>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="border-y border-border bg-card/40">
-        <div className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">
-            The scale of the problem
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground">
-            Figures from the British Retail Consortium's 2025 Crime Survey and the Office for National Statistics.
-          </p>
-          <dl className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {STATS.map((s) => (
-              <div
-                key={s.value}
-                className={`rounded-xl border bg-card p-6 shadow-sm ${
-                  s.tone === "red" ? "border-destructive/50" : "border-border"
-                }`}
-              >
-                <dt className={`text-4xl font-extrabold tracking-tight ${s.tone === "red" ? "text-destructive" : "text-primary"}`}>
-                  {s.value}
-                </dt>
-                <dd className="mt-2 text-sm text-muted-foreground">{s.label}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 
