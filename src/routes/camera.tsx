@@ -13,9 +13,15 @@ export const Route = createFileRoute("/camera")({
   head: () => ({
     meta: [
       { title: "Camera — TheftWatch Detection Demo" },
-      { name: "description", content: "TheftWatch live camera demo with shoplifting detection and evidence snapshots." },
+      {
+        name: "description",
+        content: "TheftWatch live camera demo with shoplifting detection and evidence snapshots.",
+      },
       { property: "og:title", content: "Camera — TheftWatch Detection Demo" },
-      { property: "og:description", content: "TheftWatch live camera demo with shoplifting detection and evidence snapshots." },
+      {
+        property: "og:description",
+        content: "TheftWatch live camera demo with shoplifting detection and evidence snapshots.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -66,7 +72,11 @@ function CameraView() {
             <img src="/logo-mark.png" alt="" className="h-12 w-auto shrink-0 sm:h-14" />
             <span className="truncate text-2xl font-extrabold sm:text-3xl">TheftWatch</span>
           </Link>
-          <Button asChild variant="destructive" className="btn-shine h-11 shrink-0 px-3 sm:h-12 sm:px-5">
+          <Button
+            asChild
+            variant="destructive"
+            className="btn-shine h-11 shrink-0 px-3 sm:h-12 sm:px-5"
+          >
             <Link to="/guard" aria-label="Guard demo">
               <ShieldCheck aria-hidden="true" />
               <span className="hidden sm:inline">Guard demo</span>
@@ -82,14 +92,23 @@ function CameraView() {
             <p className="mb-1 text-xs font-semibold uppercase text-primary">Detection demo</p>
             <h1 className="text-3xl font-extrabold sm:text-4xl">Camera</h1>
           </div>
-          <Badge variant={STATUS_VARIANT[status]} role="status" className="gap-2 px-3 py-1.5 text-sm">
-            <span className={`h-2 w-2 rounded-full ${status === "Alert" ? "bg-destructive-foreground" : isRunning ? "bg-primary-foreground" : "bg-muted-foreground"}`} aria-hidden="true" />
+          <Badge
+            variant={STATUS_VARIANT[status]}
+            role="status"
+            className="gap-2 px-3 py-1.5 text-sm"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${status === "Alert" ? "bg-destructive-foreground" : isRunning ? "bg-primary-foreground" : "bg-muted-foreground"}`}
+              aria-hidden="true"
+            />
             {status}
           </Badge>
         </div>
 
         {/* The active video's own shape and matching overlay stay unchanged. */}
-        <div className={`relative w-full overflow-hidden rounded-lg border bg-background ${status === "Alert" ? "border-destructive" : isRunning ? "border-primary/50" : "border-border"} ${isRunning ? "" : "aspect-video"}`}>
+        <div
+          className={`relative w-full overflow-hidden rounded-lg border bg-background ${status === "Alert" ? "border-destructive" : isRunning ? "border-primary/50" : "border-border"} ${isRunning ? "" : "aspect-video"}`}
+        >
           <video
             ref={videoRef}
             className="block max-h-[70vh] w-full object-contain"
@@ -113,7 +132,11 @@ function CameraView() {
         <div className="flex items-center justify-between gap-3 border-b border-border py-4">
           <span className="text-sm text-muted-foreground">Camera feed</span>
           {isRunning ? (
-            <Button variant="destructive" className="btn-shine h-12 min-w-32 font-semibold" onClick={stop}>
+            <Button
+              variant="destructive"
+              className="btn-shine h-12 min-w-32 font-semibold"
+              onClick={stop}
+            >
               <Square aria-hidden="true" /> Stop
             </Button>
           ) : (
@@ -129,7 +152,11 @@ function CameraView() {
             {lastResult?.line ?? "No result yet"}
           </p>
           {lastResult?.sheet && (
-            <img src={lastResult.sheet} alt="Latest contact sheet" className="mt-4 w-full max-w-sm rounded-lg border border-border" />
+            <img
+              src={lastResult.sheet}
+              alt="Latest contact sheet"
+              className="mt-4 w-full max-w-sm rounded-lg border border-border"
+            />
           )}
         </div>
       </section>
@@ -142,8 +169,16 @@ function MirrorView() {
   const sheet = log.find((entry) => entry.sheet)?.sheet;
 
   return (
-    <main className="min-h-screen bg-background p-4 text-foreground lg:p-6">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[3fr_2fr]">
+    <main className="dark min-h-screen bg-background text-foreground">
+      <header className="border-b border-border">
+        <div className="brand-strip h-1" aria-hidden="true" />
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 lg:px-6">
+          <img src="/logo-mark.png" alt="" className="h-10 w-auto" />
+          <span className="text-2xl font-extrabold">TheftWatch</span>
+          <span className="text-sm text-muted-foreground">Live detection</span>
+        </div>
+      </header>
+      <div className="mx-auto grid max-w-7xl gap-6 p-4 lg:grid-cols-[3fr_2fr] lg:p-6">
         <section className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-semibold">Live camera</h1>
