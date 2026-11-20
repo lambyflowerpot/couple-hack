@@ -44,14 +44,25 @@ function makeTestImage(): string {
   c.height = 240;
   const ctx = c.getContext("2d");
   if (!ctx) return "";
-  ctx.fillStyle = "#333";
+  // Brand palette: navy #001050, cyan #00e0f0, red #f00010.
+  ctx.fillStyle = "#001050";
   ctx.fillRect(0, 0, 320, 240);
-  ctx.fillStyle = "#fff";
+  const strip = ctx.createLinearGradient(0, 0, 320, 0);
+  strip.addColorStop(0, "#001050");
+  strip.addColorStop(0.55, "#00e0f0");
+  strip.addColorStop(1, "#f00010");
+  ctx.fillStyle = strip;
+  ctx.fillRect(0, 0, 320, 8);
+  ctx.strokeStyle = "#00e0f0";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(24, 40, 272, 160);
+  ctx.fillStyle = "#00e0f0";
   ctx.font = "bold 28px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("TEST IMAGE", 160, 120);
-  ctx.font = "16px sans-serif";
-  ctx.fillText(new Date().toLocaleTimeString(), 160, 150);
+  ctx.fillText("TEST IMAGE", 160, 118);
+  ctx.fillStyle = "#f00010";
+  ctx.font = "bold 16px sans-serif";
+  ctx.fillText(new Date().toLocaleTimeString(), 160, 152);
   return c.toDataURL("image/jpeg", 0.7);
 }
 
