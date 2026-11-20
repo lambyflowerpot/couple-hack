@@ -62,11 +62,15 @@ function Landing() {
       {/* Nav */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="brand-strip-flow h-1" aria-hidden="true" />
-        <div className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 sm:flex sm:justify-between sm:py-5">
-          <div className="flex min-w-0 items-center gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 sm:flex sm:justify-between sm:px-6 sm:py-5">
+          <Link
+            to="/"
+            aria-label="TheftWatch home"
+            className="flex min-w-0 items-center gap-3 transition hover:opacity-80"
+          >
             <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto shrink-0 sm:h-14" />
             <span className="truncate text-2xl font-extrabold tracking-tight sm:text-3xl">TheftWatch</span>
-          </div>
+          </Link>
           <Link
             to="/guard"
             className="btn-shine shrink-0 rounded-xl bg-destructive px-4 py-2.5 text-base font-bold text-destructive-foreground transition hover:bg-destructive/90 sm:px-7 sm:py-3.5 sm:text-lg"
@@ -77,7 +81,7 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-5xl overflow-hidden px-4 pb-10 pt-10 text-center sm:pt-14">
+      <section className="relative overflow-hidden pb-10 pt-6 text-center sm:pt-10">
         <div className="ambient" aria-hidden="true">
           <span className="grid-faint" />
           <span className="glow glow-a" />
@@ -85,22 +89,22 @@ function Landing() {
           <span className="scanline" />
         </div>
 
-        <div className="relative">
+        <div className="relative mx-auto max-w-5xl px-4">
           <p
-            className="rise inline-block rounded-full border border-border bg-card/70 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
+            className="rise inline-block rounded-full border border-border bg-card/70 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
             style={delay(80)}
           >
             UK retail crime · 2025
           </p>
           <h1
-            className="rise mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl"
+            className="rise mx-auto mt-4 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl"
             style={delay(200)}
           >
             Supermarket theft is at <span className="text-destructive">record levels.</span> Your CCTV can{" "}
             <span className="underline-sweep text-primary">stop it.</span>
           </h1>
           <p
-            className="rise mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg"
+            className="rise mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
             style={delay(360)}
           >
             UK retailers lost <span className="font-bold text-destructive">£2.2bn</span> to shoplifting last year —{" "}
@@ -110,7 +114,7 @@ function Landing() {
             item is concealed.
           </p>
           <div
-            className="rise mt-6 flex flex-col items-center justify-center gap-4 sm:mt-8 sm:flex-row"
+            className="rise mt-5 flex flex-col items-center justify-center gap-4 sm:mt-7 sm:flex-row"
             style={delay(520)}
           >
             <Link

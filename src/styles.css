@@ -403,6 +403,164 @@
   animation: tw-strip-flow 7s linear infinite;
 }
 
+/*
+ * Guard page motion.
+ *
+ * New incidents slide in with a red flash that fades away, the alert banner
+ * glows and pops in, the "N new" badge ticks up with a flip, and reviewing a
+ * card eases it into its greyed-out state. Live incidents carry a pulsing
+ * dot and a softly breathing red edge. All effects go static under
+ * prefers-reduced-motion.
+ */
+
+@keyframes tw-incident-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -18px, 0) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tw-flash {
+  from {
+    background: color-mix(in oklab, var(--color-destructive) 45%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+@keyframes tw-alert-pop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tw-alert-glow {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 0 transparent, 0 6px 26px -8px color-mix(in oklab, var(--color-destructive) 70%, transparent);
+  }
+  50% {
+    box-shadow: inset 0 0 22px 0 color-mix(in oklab, var(--color-destructive-foreground) 18%, transparent),
+      0 6px 40px -6px color-mix(in oklab, var(--color-destructive) 95%, transparent);
+  }
+}
+
+@keyframes tw-edge-breathe {
+  0%,
+  100% {
+    border-color: color-mix(in oklab, var(--color-destructive) 100%, var(--color-border));
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-destructive) 0%, transparent);
+  }
+  50% {
+    border-color: color-mix(in oklab, var(--color-destructive) 55%, var(--color-border));
+    box-shadow: 0 10px 34px -14px color-mix(in oklab, var(--color-destructive) 60%, transparent);
+  }
+}
+
+@keyframes tw-dot-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes tw-flip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-55%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* A freshly arrived incident slides in. */
+.incident-enter {
+  animation: tw-incident-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Red flash layered over the card that fades out. */
+.incident-flash {
+  position: relative;
+}
+
+.incident-flash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: tw-flash 1.4s ease-out both;
+}
+
+/* Live incidents breathe with a soft red edge. */
+.incident-live {
+  animation: tw-edge-breathe 3.2s ease-in-out infinite;
+}
+
+/* The "Review needed" banner pops in and glows. */
+.alert-banner {
+  animation:
+    tw-alert-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+    tw-alert-glow 2s ease-in-out 0.4s infinite;
+}
+
+/* Pulsing live dot. */
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-destructive);
+}
+
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--color-destructive);
+  animation: tw-dot-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* The new-incident count flips when it changes. */
+.count-flip {
+  display: inline-block;
+  animation: tw-flip-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Reviewed/false-alarm cards ease into their dimmed state. */
+.incident-card {
+  transition:
+    opacity 0.55s ease,
+    filter 0.55s ease,
+    border-color 0.55s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+}
+
+.incident-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px -18px color-mix(in oklab, var(--color-accent) 45%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -413,7 +571,13 @@
   .ambient .scanline,
   .underline-sweep::after,
   .bob,
-  .brand-strip-flow {
+  .brand-strip-flow,
+  .incident-enter,
+  .incident-flash::after,
+  .incident-live,
+  .alert-banner,
+  .live-dot::after,
+  .count-flip {
     animation: none !important;
   }
 
@@ -433,7 +597,8 @@
   }
 
   .card-lift,
-  .btn-shine::after {
+  .btn-shine::after,
+  .incident-card {
     transition: none;
   }
 }
