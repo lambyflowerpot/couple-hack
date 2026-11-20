@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -158,13 +158,13 @@ function GuardPage() {
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="brand-strip h-1" aria-hidden="true" />
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-4">
-          <div className="flex items-center gap-3">
+          <Link to="/" aria-label="TheftWatch home" className="flex items-center gap-3 transition hover:opacity-80">
             <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto" />
             <div>
               <h1 className="text-2xl font-extrabold leading-tight tracking-tight">TheftWatch</h1>
               <p className="text-xs text-muted-foreground">Guard · live incident feed</p>
             </div>
-          </div>
+          </Link>
           <div
             className={`rounded-full px-3 py-1 text-sm font-semibold ${newCount > 0 ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}
             aria-label={`${newCount} new incidents`}
