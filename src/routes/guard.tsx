@@ -167,7 +167,7 @@ function GuardPage() {
     <main className="dark min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="brand-strip-flow h-1" aria-hidden="true" />
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-4">
+        <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-6">
           <Link to="/" aria-label="TheftWatch home" className="flex items-center gap-3 transition hover:opacity-80">
             <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto" />
             <div>
