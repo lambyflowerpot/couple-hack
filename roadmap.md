@@ -12,6 +12,5 @@
   ambient hero glow with a sweeping scan line, card/button hover effects, flowing brand strip.
   Disabled for visitors who prefer reduced motion.
 
-## Blocked / for the teammate
-- `src/routes/camera.tsx` head metadata still says "Shoplifting Detection Demo" (old name).
-  That file is teammate-owned, so it needs changing through their Git branch.
+- Camera page restyled to match the dark landing page, with branded navigation, cyan Start,
+  red Stop, and updated TheftWatch metadata; user authorised this one-time edit only.
