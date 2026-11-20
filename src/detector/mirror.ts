@@ -23,7 +23,11 @@ const jpegDataUrl = z.string().startsWith("data:image/jpeg;base64,");
 const frameSchema = z.object({
   image: jpegDataUrl,
   status: z.enum(DETECTOR_STATUSES),
-  shelf: z.array(z.object({ name: z.string().max(80), state: z.enum(ITEM_STATES) })).max(20),
+  // A phone tab opened before the shelf list existed sends none; show its video anyway.
+  shelf: z
+    .array(z.object({ name: z.string().max(80), state: z.enum(ITEM_STATES) }))
+    .max(20)
+    .catch([]),
 });
 const logSchema = z.object({
   at: z.number(),
