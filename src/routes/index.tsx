@@ -81,7 +81,7 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-5xl overflow-hidden px-4 pb-10 pt-6 text-center sm:pt-10">
+      <section className="relative overflow-hidden pb-10 pt-6 text-center sm:pt-10">
         <div className="ambient" aria-hidden="true">
           <span className="grid-faint" />
           <span className="glow glow-a" />
@@ -89,7 +89,7 @@ function Landing() {
           <span className="scanline" />
         </div>
 
-        <div className="relative">
+        <div className="relative mx-auto max-w-5xl px-4">
           <p
             className="rise inline-block rounded-full border border-border bg-card/70 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
             style={delay(80)}
