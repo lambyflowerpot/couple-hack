@@ -156,6 +156,7 @@ function GuardPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur">
+        <div className="brand-strip h-1" aria-hidden="true" />
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-2">
             <img src="/logo-mark.png" alt="TheftWatch" className="h-9 w-auto" />
@@ -215,7 +216,7 @@ function GuardPage() {
                     <span>{i.created_at ? new Date(i.created_at).toLocaleString() : ""}</span>
                     <span className="flex gap-1">
                       {isTest && <span className="rounded bg-accent px-2 py-0.5 font-semibold text-accent-foreground">TEST</span>}
-                      <span className="rounded bg-muted px-2 py-0.5 font-medium">{i.status === "false_alarm" ? "False alarm" : i.status === "reviewed" ? "Reviewed" : "New"}</span>
+                      <span className={`rounded px-2 py-0.5 font-medium ${isNew ? "bg-accent text-accent-foreground" : "bg-muted"}`}>{i.status === "false_alarm" ? "False alarm" : i.status === "reviewed" ? "Reviewed" : "New"}</span>
                     </span>
                   </div>
                   <h2 className="text-lg font-semibold">{i.item ?? "Unknown item"}</h2>
@@ -226,7 +227,7 @@ function GuardPage() {
                     </div>
                     <div>
                       <dt className="text-xs text-muted-foreground">Confidence</dt>
-                      <dd className="font-medium">{pct(i.confidence)}</dd>
+                      <dd className="font-semibold text-primary">{pct(i.confidence)}</dd>
                     </div>
                   </dl>
                   {i.reason && <p className="text-sm text-muted-foreground">{i.reason}</p>}
