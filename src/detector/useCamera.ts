@@ -11,21 +11,37 @@ async function openStream(): Promise<MediaStream> {
 
 export function useCamera() {
   const streamRef = useRef<MediaStream | null>(null);
+  const clipUrlRef = useRef<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const stop = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
+    const video = videoRef.current;
+    if (video) video.srcObject = null;
+    if (video && clipUrlRef.current) {
+      video.removeAttribute("src");
+      video.load();
+      URL.revokeObjectURL(clipUrlRef.current);
+    }
+    clipUrlRef.current = null;
   }, []);
 
-  const start = useCallback(async (video: HTMLVideoElement) => {
+  /** Plays the rear camera, or `clip` (a recorded test video) when given. */
+  const start = useCallback(async (video: HTMLVideoElement, clip?: File) => {
+    videoRef.current = video;
+    if (clip) {
+      clipUrlRef.current = URL.createObjectURL(clip);
+      video.srcObject = null;
+      video.src = clipUrlRef.current;
+      await video.play();
+      return;
+    }
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error("Camera needs HTTPS (or localhost) and a supported browser");
     }
     const stream = await openStream();
     streamRef.current = stream;
-    videoRef.current = video;
     video.srcObject = stream;
     await video.play();
   }, []);

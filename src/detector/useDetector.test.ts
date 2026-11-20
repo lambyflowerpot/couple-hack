@@ -11,6 +11,7 @@ const result = (overrides: Partial<AnalysisResult>): AnalysisResult => ({
   location: "pocket",
   confidence: 0.9,
   reason: "",
+  track: [],
   ...overrides,
 });
 
