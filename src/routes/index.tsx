@@ -63,7 +63,7 @@ function Landing() {
           </div>
           <Link
             to="/guard"
-            className="rounded-lg bg-destructive px-5 py-2.5 text-base font-semibold text-destructive-foreground transition hover:bg-destructive/90"
+            className="rounded-xl bg-destructive px-7 py-3.5 text-lg font-bold text-destructive-foreground transition hover:bg-destructive/90"
           >
             Guard demo
           </Link>
