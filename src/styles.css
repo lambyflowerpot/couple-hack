@@ -155,8 +155,285 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+}
+
+/*
+ * Landing page motion.
+ *
+ * `.rise` staggers the hero in on load, `.reveal` fades sections up as they
+ * scroll into view, and the `.ambient` layer drifts navy/cyan/red glows, a
+ * faint CCTV grid and a sweeping scan line behind the headline. Cards lift,
+ * buttons catch a specular sweep, the brand strip flows. Every effect collapses
+ * to a static page under prefers-reduced-motion.
+ */
+
+@keyframes tw-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tw-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -28px, 0) scale(1.12);
+  }
+}
+
+@keyframes tw-drift-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.06);
+  }
+  50% {
+    transform: translate3d(26px, 20px, 0) scale(1);
+  }
+}
+
+@keyframes tw-scan {
+  0% {
+    top: 6%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  55% {
+    opacity: 0.3;
+  }
+  88% {
+    opacity: 0.45;
+  }
+  100% {
+    top: 86%;
+    opacity: 0;
+  }
+}
+
+@keyframes tw-line {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes tw-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes tw-strip-flow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: -200% 50%;
+  }
+}
+
+/* On-load entrance; --d staggers siblings against each other. */
+.rise {
+  animation: tw-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Scroll-triggered entrance; --reveal-delay staggers a group. */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Ambient hero backdrop: drifting brand glows, CCTV grid, sweeping scan line. */
+.ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient .grid-faint {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-accent) 14%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-accent) 14%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 35%, black, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 35%, black, transparent 72%);
+}
+
+.ambient .glow {
+  position: absolute;
+  display: block;
+  border-radius: 9999px;
+  filter: blur(70px);
+}
+
+.ambient .glow-a {
+  top: -9rem;
+  left: -7rem;
+  width: 26rem;
+  height: 26rem;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-accent) 55%, transparent), transparent 70%);
+  animation: tw-drift 16s ease-in-out infinite;
+}
+
+.ambient .glow-b {
+  right: -7rem;
+  bottom: -10rem;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, color-mix(in oklab, var(--color-destructive) 45%, transparent), transparent 70%);
+  animation: tw-drift-slow 21s ease-in-out infinite;
+}
+
+.ambient .scanline {
+  position: absolute;
+  top: 6%;
+  right: 5%;
+  left: 5%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--color-accent) 85%, transparent),
+    transparent
+  );
+  animation: tw-scan 8s ease-in-out infinite;
+}
+
+/* Gradient underline that draws itself under a headline phrase. */
+.underline-sweep {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-sweep::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -0.06em;
+  left: 0;
+  height: 0.09em;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-destructive));
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: tw-line 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
+}
+
+/* Cards lift and pick up a cyan edge on hover. */
+.card-lift {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.card-lift:hover {
+  border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-border));
+  box-shadow: 0 18px 42px -20px color-mix(in oklab, var(--color-accent) 55%, transparent);
+  transform: translateY(-4px);
+}
+
+/* Buttons catch a specular sweep on hover. */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 32%, oklch(1 0 0 / 0.4) 50%, transparent 68%);
+  transform: translateX(-130%);
+  transition: transform 0.75s ease;
+}
+
+.btn-shine:hover::after {
+  transform: translateX(130%);
+}
+
+.bob {
+  animation: tw-bob 1.9s ease-in-out infinite;
+}
+
+/* Brand strip that flows, for the landing page only. */
+@utility brand-strip-flow {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-accent) 20%,
+    var(--color-destructive) 40%,
+    var(--color-accent) 60%,
+    var(--color-primary) 80%,
+    var(--color-accent)
+  );
+  background-size: 200% 100%;
+  animation: tw-strip-flow 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rise,
+  .ambient .glow,
+  .ambient .scanline,
+  .underline-sweep::after,
+  .bob,
+  .brand-strip-flow {
+    animation: none !important;
+  }
+
+  .rise {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .underline-sweep::after {
+    transform: scaleX(1);
+  }
+
+  .card-lift,
+  .btn-shine::after {
+    transition: none;
   }
 }
