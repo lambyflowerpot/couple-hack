@@ -103,7 +103,9 @@ export function useDetector() {
   }
 
   function tick(run: Run) {
-    const frame = captureFrame(run.video);
+    // Once the buffer is full, the oldest frame's canvas is redrawn and moves to the end.
+    const oldest = run.frames.length === BUFFER_SIZE ? run.frames[0] : undefined;
+    const frame = captureFrame(run.video, oldest);
     if (!frame) return;
     run.frames = [...run.frames, frame].slice(-BUFFER_SIZE);
     const grey = toGrey(frame);

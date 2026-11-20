@@ -38,11 +38,11 @@ function Page() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-xl flex-col gap-4 bg-background p-4 text-foreground">
-      {/* Same size and object-contain as the video, so overlay pixels line up with video pixels. */}
-      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+      {/* The box takes the video's own shape (portrait on phones); the overlay matches it exactly. */}
+      <div className="relative w-full overflow-hidden rounded-lg bg-black">
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-contain"
+          className="block max-h-[70vh] w-full object-contain"
           playsInline
           muted
           autoPlay
