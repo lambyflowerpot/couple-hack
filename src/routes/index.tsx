@@ -81,7 +81,7 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-5xl overflow-hidden px-4 pb-10 pt-10 text-center sm:pt-14">
+      <section className="relative mx-auto max-w-5xl overflow-hidden px-4 pb-10 pt-6 text-center sm:pt-10">
         <div className="ambient" aria-hidden="true">
           <span className="grid-faint" />
           <span className="glow glow-a" />
@@ -91,20 +91,20 @@ function Landing() {
 
         <div className="relative">
           <p
-            className="rise inline-block rounded-full border border-border bg-card/70 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
+            className="rise inline-block rounded-full border border-border bg-card/70 px-3 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground backdrop-blur"
             style={delay(80)}
           >
             UK retail crime · 2025
           </p>
           <h1
-            className="rise mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl"
+            className="rise mx-auto mt-4 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-6xl"
             style={delay(200)}
           >
             Supermarket theft is at <span className="text-destructive">record levels.</span> Your CCTV can{" "}
             <span className="underline-sweep text-primary">stop it.</span>
           </h1>
           <p
-            className="rise mx-auto mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg"
+            className="rise mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
             style={delay(360)}
           >
             UK retailers lost <span className="font-bold text-destructive">£2.2bn</span> to shoplifting last year —{" "}
@@ -114,7 +114,7 @@ function Landing() {
             item is concealed.
           </p>
           <div
-            className="rise mt-6 flex flex-col items-center justify-center gap-4 sm:mt-8 sm:flex-row"
+            className="rise mt-5 flex flex-col items-center justify-center gap-4 sm:mt-7 sm:flex-row"
             style={delay(520)}
           >
             <Link
