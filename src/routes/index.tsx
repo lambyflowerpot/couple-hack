@@ -56,14 +56,14 @@ function Landing() {
       {/* Nav */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
         <div className="brand-strip h-1" aria-hidden="true" />
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <img src="/logo-mark.png" alt="TheftWatch" className="h-9 w-auto" />
-            <span className="text-lg font-bold tracking-tight">TheftWatch</span>
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:py-5">
+          <div className="flex items-center gap-3">
+            <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto sm:h-14" />
+            <span className="text-2xl font-extrabold tracking-tight sm:text-3xl">TheftWatch</span>
           </div>
           <Link
             to="/guard"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+            className="rounded-lg bg-primary px-5 py-2.5 text-base font-semibold text-primary-foreground transition hover:bg-primary/90"
           >
             Guard demo
           </Link>
