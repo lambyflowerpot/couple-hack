@@ -61,6 +61,7 @@ function GuardPage() {
   const [alert, setAlert] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const [sending, setSending] = useState(false);
+  const [freshIds, setFreshIds] = useState<ReadonlySet<string>>(new Set());
   const audioRef = useRef<AudioContext | null>(null);
   const soundRef = useRef(false);
 
@@ -102,6 +103,15 @@ function GuardPage() {
         if (payload.eventType === "INSERT") {
           const row = payload.new as Incident;
           setIncidents((prev) => sortNewest([row, ...prev.filter((p) => p.id !== row.id)]));
+          setFreshIds((prev) => new Set(prev).add(row.id));
+          window.setTimeout(() => {
+            setFreshIds((prev) => {
+              if (!prev.has(row.id)) return prev;
+              const next = new Set(prev);
+              next.delete(row.id);
+              return next;
+            });
+          }, 1600);
           if (row.status === "new") {
             setAlert(true);
             beep();
@@ -156,7 +166,7 @@ function GuardPage() {
   return (
     <main className="dark min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
-        <div className="brand-strip h-1" aria-hidden="true" />
+        <div className="brand-strip-flow h-1" aria-hidden="true" />
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-4">
           <Link to="/" aria-label="TheftWatch home" className="flex items-center gap-3 transition hover:opacity-80">
             <img src="/logo-mark.png" alt="TheftWatch" className="h-12 w-auto" />
@@ -166,47 +176,58 @@ function GuardPage() {
             </div>
           </Link>
           <div
-            className={`rounded-full px-3 py-1 text-sm font-semibold ${newCount > 0 ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}
+            className={`flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold transition-colors ${newCount > 0 ? "bg-destructive text-destructive-foreground" : "bg-muted text-muted-foreground"}`}
             aria-label={`${newCount} new incidents`}
           >
-            {newCount} new
+            {newCount > 0 && <span className="live-dot" aria-hidden="true" />}
+            <span key={newCount} className="count-flip">
+              {newCount}
+            </span>{" "}
+            new
           </div>
         </div>
         {alert && newCount > 0 && (
           <button
             type="button"
             onClick={() => setAlert(false)}
-            className="block w-full animate-pulse bg-destructive px-4 py-3 text-center text-base font-bold uppercase tracking-wide text-destructive-foreground"
+            className="alert-banner block w-full bg-destructive px-4 py-3 text-center text-base font-bold uppercase tracking-wide text-destructive-foreground"
           >
             Review needed
           </button>
         )}
       </header>
 
-      <div className="mx-auto max-w-2xl px-4 py-4">
-        <div className="grid grid-cols-2 gap-2">
-          <Button variant={soundOn ? "secondary" : "default"} className="h-12" onClick={enableSound} disabled={soundOn}>
+      <div className="relative mx-auto max-w-2xl px-4 py-4">
+        <div className="ambient" aria-hidden="true">
+          <div className="grid-faint" />
+          <span className="glow glow-a" />
+          <span className="glow glow-b" />
+        </div>
+        <div className="rise relative grid grid-cols-2 gap-2" style={{ "--d": "80ms" } as React.CSSProperties}>
+          <Button variant={soundOn ? "secondary" : "default"} className="btn-shine h-12" onClick={enableSound} disabled={soundOn}>
             {soundOn ? "Sound on" : "Enable sound"}
           </Button>
-          <Button variant="outline" className="h-12" onClick={sendTest} disabled={sending}>
+          <Button variant="outline" className="btn-shine h-12" onClick={sendTest} disabled={sending}>
             {sending ? "Sending…" : "Send test incident"}
           </Button>
         </div>
 
-        <ul className="mt-4 space-y-4">
+        <ul className="relative mt-4 space-y-4">
           {loading && <li className="text-center text-sm text-muted-foreground">Loading…</li>}
           {!loading && incidents.length === 0 && (
             <li className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
               No incidents yet.
             </li>
           )}
-          {incidents.map((i) => {
+          {incidents.map((i, idx) => {
             const isNew = i.status === "new";
             const isTest = (i.item ?? "").startsWith("[TEST]");
+            const isFresh = freshIds.has(i.id);
             return (
               <li
                 key={i.id}
-                className={`overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition ${isNew ? "border-destructive" : "border-border opacity-50 grayscale"}`}
+                className={`incident-card overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm ${isNew ? "incident-live border-destructive" : "border-border opacity-50 grayscale"} ${isFresh ? "incident-enter incident-flash" : "rise"}`}
+                style={isFresh ? undefined : ({ "--d": `${Math.min(idx, 6) * 70}ms` } as React.CSSProperties)}
               >
                 {i.evidence && (
                   <img src={i.evidence} alt={`Evidence: ${i.item ?? "incident"}`} className="aspect-video w-full bg-muted object-cover" />
@@ -232,10 +253,10 @@ function GuardPage() {
                   </dl>
                   {i.reason && <p className="text-sm text-muted-foreground">{i.reason}</p>}
                   <div className="grid grid-cols-2 gap-2 pt-2">
-                    <Button className="h-11" onClick={() => setStatus(i.id, "reviewed")} disabled={i.status === "reviewed"}>
+                    <Button className="btn-shine h-11" onClick={() => setStatus(i.id, "reviewed")} disabled={i.status === "reviewed"}>
                       Reviewed
                     </Button>
-                    <Button variant="outline" className="h-11" onClick={() => setStatus(i.id, "false_alarm")} disabled={i.status === "false_alarm"}>
+                    <Button variant="outline" className="btn-shine h-11" onClick={() => setStatus(i.id, "false_alarm")} disabled={i.status === "false_alarm"}>
                       False alarm
                     </Button>
                   </div>
