@@ -8,6 +8,9 @@
 - Logo: lens-eye emblem in the CCTV logo's navy/cyan/red palette, placed in the Guard header,
   the home page and the browser tab icon (`public/logo.png`, `public/logo-mark.png`,
   `public/favicon.png`; default `favicon.ico` removed).
+- Landing page motion: staggered hero entrance, scroll-revealed sections, figures that count up,
+  ambient hero glow with a sweeping scan line, card/button hover effects, flowing brand strip.
+  Disabled for visitors who prefer reduced motion.
 
 ## Blocked / for the teammate
 - `src/routes/camera.tsx` head metadata still says "Shoplifting Detection Demo" (old name).
