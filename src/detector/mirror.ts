@@ -4,8 +4,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DETECTOR_STATUSES,
+  ITEM_STATES,
   LOG_KINDS,
-  type DetectorStatus,
   type LogEntry,
   type MirrorFrame,
 } from "./types";
@@ -20,7 +20,11 @@ export const MIRROR_INTERVAL_MS = 200;
 
 // Anyone with the public key can broadcast on the channel, so the viewer validates what it renders.
 const jpegDataUrl = z.string().startsWith("data:image/jpeg;base64,");
-const frameSchema = z.object({ image: jpegDataUrl, status: z.enum(DETECTOR_STATUSES) });
+const frameSchema = z.object({
+  image: jpegDataUrl,
+  status: z.enum(DETECTOR_STATUSES),
+  shelf: z.array(z.object({ name: z.string().max(80), state: z.enum(ITEM_STATES) })).max(20),
+});
 const logSchema = z.object({
   at: z.number(),
   kind: z.enum(LOG_KINDS),
@@ -29,7 +33,11 @@ const logSchema = z.object({
 });
 
 export interface MirrorPublisher {
-  sendFrame(video: HTMLVideoElement, overlay: HTMLCanvasElement, status: DetectorStatus): void;
+  sendFrame(
+    video: HTMLVideoElement,
+    overlay: HTMLCanvasElement,
+    state: Omit<MirrorFrame, "image">,
+  ): void;
   log(entry: LogEntry): void;
   close(): void;
 }
@@ -53,7 +61,7 @@ export function openMirror(): MirrorPublisher {
   };
 
   return {
-    sendFrame(video, overlay, status) {
+    sendFrame(video, overlay, state) {
       if (!hasViewer || !video.videoWidth) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -61,7 +69,7 @@ export function openMirror(): MirrorPublisher {
       canvas.height = Math.round((MIRROR_WIDTH * video.videoHeight) / video.videoWidth);
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       ctx.drawImage(overlay, 0, 0, canvas.width, canvas.height);
-      send("frame", { image: canvas.toDataURL("image/jpeg", MIRROR_QUALITY), status });
+      send("frame", { image: canvas.toDataURL("image/jpeg", MIRROR_QUALITY), ...state });
     },
     log: (entry) => send("log", entry),
     close: () => void supabase.removeChannel(channel),

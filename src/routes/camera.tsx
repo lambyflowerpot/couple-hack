@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Camera, Play, ShieldCheck, Square } from "lucide-react";
-import { useRef } from "react";
+import { Camera, Film, Play, ShieldCheck, Square } from "lucide-react";
+import { useRef, type ChangeEvent } from "react";
 
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useMirrorView } from "@/detector/mirror";
-import type { LogKind } from "@/detector/types";
+import type { ItemState, LogKind, ShelfItem } from "@/detector/types";
 import { useDetector } from "@/detector/useDetector";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/camera")({
 
 const STATUS_VARIANT: Record<string, BadgeProps["variant"]> = {
   Idle: "secondary",
+  Scanning: "outline",
   Watching: "default",
   Checking: "outline",
   Alert: "destructive",
@@ -49,6 +50,35 @@ const LOG_STYLE: Record<LogKind, string> = {
   error: "border border-destructive text-destructive",
 };
 
+const ITEM_STYLE: Record<ItemState, string> = {
+  on_shelf: "border-border text-muted-foreground",
+  picked_up: "border-primary text-primary",
+  returned: "border-border text-foreground",
+  concealed: "border-destructive bg-destructive text-destructive-foreground",
+};
+
+const ITEM_LABEL: Record<ItemState, string> = {
+  on_shelf: "on shelf",
+  picked_up: "taken",
+  returned: "put back",
+  concealed: "concealed",
+};
+
+function ShelfList({ shelf }: { shelf: ShelfItem[] }) {
+  return (
+    <ul aria-label="Shelf items" className="flex flex-wrap gap-2">
+      {shelf.map((item) => (
+        <li
+          key={item.name}
+          className={cn("rounded-full border px-3 py-1 text-sm", ITEM_STYLE[item.state])}
+        >
+          {item.name} · <span className="font-semibold">{ITEM_LABEL[item.state]}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Page() {
   return Route.useSearch().view ? <MirrorView /> : <CameraView />;
 }
@@ -56,11 +86,19 @@ function Page() {
 function CameraView() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
-  const { status, lastResult, start, stop } = useDetector();
+  const { status, lastResult, shelf, start, stop } = useDetector();
   const isRunning = status !== "Idle";
 
-  const onStart = () => {
-    if (videoRef.current && overlayRef.current) void start(videoRef.current, overlayRef.current);
+  const onStart = (clip?: File) => {
+    if (videoRef.current && overlayRef.current) {
+      void start(videoRef.current, overlayRef.current, clip);
+    }
+  };
+
+  const onClip = (event: ChangeEvent<HTMLInputElement>) => {
+    const clip = event.target.files?.[0];
+    event.target.value = ""; // lets the same clip be picked again
+    if (clip) onStart(clip);
   };
 
   return (
@@ -140,11 +178,26 @@ function CameraView() {
               <Square aria-hidden="true" /> Stop
             </Button>
           ) : (
-            <Button className="btn-shine h-12 min-w-32 font-semibold" onClick={onStart}>
-              <Play aria-hidden="true" /> Start
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline" className="h-12">
+                <label>
+                  <Film aria-hidden="true" /> Test clip
+                  <input type="file" accept="video/*" className="sr-only" onChange={onClip} />
+                </label>
+              </Button>
+              <Button className="btn-shine h-12 min-w-32 font-semibold" onClick={() => onStart()}>
+                <Play aria-hidden="true" /> Start
+              </Button>
+            </div>
           )}
         </div>
+
+        {shelf.length > 0 && (
+          <div className="pt-5">
+            <h2 className="mb-2 text-sm font-semibold">Shelf</h2>
+            <ShelfList shelf={shelf} />
+          </div>
+        )}
 
         <div className="pt-5">
           <h2 className="mb-2 text-sm font-semibold">Latest result</h2>
@@ -189,6 +242,7 @@ function MirrorView() {
               {isLive && frame ? frame.status : "Offline"}
             </Badge>
           </div>
+          {isLive && frame && frame.shelf.length > 0 && <ShelfList shelf={frame.shelf} />}
           <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-black">
             {isLive && frame ? (
               <img
@@ -205,7 +259,7 @@ function MirrorView() {
           {sheet && (
             <figure className="flex flex-col gap-2">
               <figcaption className="text-sm text-muted-foreground">
-                Last 4 frames the AI checked, oldest first
+                Latest frames the AI checked, in time order
               </figcaption>
               <img
                 src={sheet}
