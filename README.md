@@ -2,6 +2,8 @@
 
 Shoplifting detection for any shop, using any phone.
 
+**Live app:** [theft-watch.lovable.app](https://theft-watch.lovable.app)
+
 TheftWatch turns an ordinary phone into a smart CCTV camera. It scans a shelf to learn its stock, follows each action from shelf to hand to pocket, and alerts a guard's phone with evidence frames only when a stock item is concealed. Every decision, including the decision not to alert, comes with a stated reason.
 
 ## Features
